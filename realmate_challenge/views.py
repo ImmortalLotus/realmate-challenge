@@ -4,6 +4,7 @@ from .serializers.webhook_serializer import WebhookSerializer
 from .models.conversations import Conversations
 from .models.messages import Messages
 from .serializers.messages_serializer import MessageSerializer
+from .serializers.conversations_serializer import ConversationSerializer
 import logging
 
 logger = logging.getLogger('django')
@@ -37,3 +38,9 @@ class ConversationDetailsView(APIView):
             "status": conversation.status,
             "messages": serializer.data
         }, status=200)
+
+class ConversationListView(APIView):
+    def get(self, request):
+        conversations = Conversations.objects.all()
+        serializer = ConversationSerializer(conversations, many=True)
+        return Response(serializer.data, status=200)
